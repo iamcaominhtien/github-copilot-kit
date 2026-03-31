@@ -35,7 +35,9 @@ Run a broad, parallel scan to collect signals about the project. Look for:
 | Existing docs | `README.md`, `docs/`, `ADR-*.md` |
 | Existing instructions | `.github/copilot-instructions.md`, `.github/AGENTS.md` |
 
-**If the repo is essentially empty** (no code files, no config, only `.git/`) → skip to **Step 2 (Empty Repo)**.
+> **Note:** Always ignore the `.github/` folder during scanning — it contains default Copilot/agent setup boilerplate that is not specific to the project being set up.
+
+**If the repo is essentially empty** (no code files, no config outside `.github/`, only `.git/`) → skip to **Step 2 (Empty Repo)**.
 **If the repo has content** → skip to **Step 3 (Generate)**.
 
 ---
