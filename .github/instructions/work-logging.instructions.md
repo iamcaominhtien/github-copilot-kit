@@ -1,6 +1,6 @@
 ---
 name: work-logging
-description: "Agent must log work to the active Kanban ticket description after completing meaningful steps, for transparency, maintainability, and continuity. Applies to all agents and all files. Also: report bugs found in SKILLS or MCP tools as Kanban bug tickets."
+description: "Agent must log work to the active Kanban ticket using the Kanban MCP work log tool after completing meaningful steps, for transparency, maintainability, and continuity. Applies to all agents and all files. Also: report bugs found in SKILLS or MCP tools as Kanban bug tickets."
 applyTo: "**"
 ---
 
@@ -8,17 +8,10 @@ applyTo: "**"
 
 ## When Working on a Kanban Ticket
 
-After each meaningful step, append a `## Work Log` section to the ticket description via the `kanbander` agent.
+After each meaningful step, add a work log entry to the ticket using the Kanban MCP `add_work_log` tool via the `kanbander` agent — **not** by appending to the ticket description.
 
-```
-## Work Log
-
-- [YYYY-MM-DD] <agent>: <what was done and why>
-```
-
-- Use ISO date format, identify the agent by name, 1–2 sentences per entry
-- Never overwrite existing entries
-- Delegate via: `Use the kanbander agent to update ticket #N description: append to Work Log — ...`
+- Use ISO datetime format (date + 24h time, local timezone), identify the agent by name, 1–2 sentences per entry
+- Delegate via: `Use the kanbander agent to add a work log to ticket #N: <what was done and why>`
 
 ## When NOT on a Kanban Ticket
 
