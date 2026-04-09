@@ -122,7 +122,28 @@ Using the signals from Step 1 or answers from Step 2, compose the file following
 
 ---
 
-### Step 4 — Write and Confirm
+### Step 4 — Initialize Kanban Project
+
+After collecting project info (name, prefix), delegate to kanbander to create the Kanban project:
+
+```
+Use the kanbander agent to create a new project with name "<project name>" and prefix "<PREFIX>"
+```
+
+- **Derive the prefix** from the project name (2–4 uppercase letters, e.g. `MY-APP` → `MYA`, `github-copilot-kit` → `GCK`)
+- If the user already has a Kanban project for this repo, ask for the project ID instead of creating a new one
+- Once the project is created or confirmed, **update `.github/agents/kanbander.agent.md`** — replace the Project Info section to hardcode the resolved project ID and prefix so future agents don't need to look it up:
+
+```markdown
+## 🏗️ Project Info
+
+- **MCP prefix**: All tools use the `mcp_kanban_*` prefix.
+- **Project ID**: `<project_id>` (prefix: `<PREFIX>`)
+```
+
+---
+
+### Step 5 — Write and Confirm
 
 1. Write the generated content to `.github/copilot-instructions.md`.
 2. Show the user the file path and a brief summary of what was captured.
@@ -131,7 +152,7 @@ Using the signals from Step 1 or answers from Step 2, compose the file following
 
 ---
 
-### Step 5 — Suggest Next Steps
+### Step 6 — Suggest Next Steps
 
 After the file is confirmed, suggest relevant follow-ups:
 
