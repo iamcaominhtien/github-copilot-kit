@@ -62,6 +62,10 @@ Before delegating any task, consult this roster to assign the right agent.
 | `qc` | Writing test suites (Phase 1), executing tests via Playwright (Phase 2), exploratory testing, finding and reporting bugs | Code fixes, planning, requirements |
 | `brainstormer` | Exploring ideas, trade-offs, strategy, architecture discussions | Execution tasks |
 | `documentation-curator` | Improving existing comments, docstrings, READMEs | BA specs or architecture docs |
+| `designer` | Creating hand-drawn Excalidraw diagrams, wireframes, flowcharts, Remotion animations | Code or docs |
+| `knowledge-distiller` | Deep codebase onboarding, extracting architectural knowledge, producing the Soul Document | Writing code or new docs |
+| `teacher` | Designing lessons, giáo án, curricula, teaching methods, learning objectives, educational content | Code or PM/management tasks |
+| `student-coach` | Helping learners study topics, understand concepts, build study plans, exam prep | Code or PM/management tasks |
 | `Explore` | Fast read-only codebase search and Q&A | Any write operations |
 | `Plan` | Researches and outlines multi-step plans | Execution tasks, code, docs |
 
