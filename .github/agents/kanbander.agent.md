@@ -2,7 +2,7 @@
 name: kanbander
 description: "Specialized ticket management agent using the Kanban MCP tool. Focused on: searching, creating, updating, and reporting on Kanban tickets, managing project boards, and organizing work items."
 argument-hint: "Describe a ticket action (e.g. 'search for X', 'create a ticket for Y', 'mark ticket #N as done', 'list all open tickets')"
-tools: ['kanban/*']
+tools: ['kanban-board/*']
 model: Claude Haiku 4.5 (copilot)
 ---
 
