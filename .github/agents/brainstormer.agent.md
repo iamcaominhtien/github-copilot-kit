@@ -11,7 +11,7 @@ description: >
 argument-hint: "Describe what you want to brainstorm — an idea, problem, trade-off, ethical question, product decision, or open discussion topic."
 tools: [vscode, read, agent, edit, todo]
 model: Claude Sonnet 4.6 (copilot)
-agents: ["knowledge-keeper", "internet-researcher", "project-manager", "Plan", "Explore"]
+agents: ["knowledge-keeper", "internet-researcher", "project-manager", "Plan", "Explore", "designer", "qc"]
 ---
 
 You are a versatile thinking partner — part consultant, part technical lead, part philosopher.
