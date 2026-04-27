@@ -23,6 +23,10 @@ Output:
   research-output/<topic-slug>-<YYYY-MM-DD>.html ← HTML (justified text, centered images)
   research-output/<topic-slug>-<YYYY-MM-DD>.pdf  ← PDF (requires: pip install weasyprint)
 
+Options:
+  --cover <path>   Prepend a cover image (PNG/JPG) as the first page.
+                   Path can be absolute or relative to the workspace root.
+
 Dependencies (optional, for HTML/PDF):
   pip install markdown weasyprint
 """
@@ -224,16 +228,37 @@ HTML_TEMPLATE = """\
       color: #888;
       font-weight: normal;
     }}
+    /* ── Cover page ── */
+    .cover-page {{
+      width: 100%;
+      height: 100vh;
+      page-break-after: always;
+      break-after: page;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
+      padding: 0;
+    }}
+    .cover-img {{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      border-radius: 0;
+      box-shadow: none;
+    }}
   </style>
 </head>
 <body>
+{cover}
 {body}
 </body>
 </html>
 """
 
 
-def md_to_html(md_content: str, topic_slug: str, output_dir: Path) -> str:
+def md_to_html(md_content: str, topic_slug: str, output_dir: Path, cover_path: Path | None = None) -> str:
     """Convert Markdown to a full HTML string with justified text and centered figures."""
     try:
         import markdown as md_lib
@@ -267,7 +292,22 @@ def md_to_html(md_content: str, topic_slug: str, output_dir: Path) -> str:
     title_m = re.search(r"<h1[^>]*>(.*?)</h1>", body_html, re.IGNORECASE | re.DOTALL)
     title = re.sub(r"<[^>]+>", "", title_m.group(1)).strip() if title_m else topic_slug
 
-    return HTML_TEMPLATE.format(title=title, body=body_html)
+    # Cover page — full-bleed image on its own page before the content
+    cover_html = ""
+    if cover_path and cover_path.exists():
+        # Make path relative to the output HTML file (which lives in research-output/)
+        try:
+            rel = cover_path.resolve().relative_to(RESEARCH_OUTPUT.resolve())
+            cover_src = str(rel)
+        except ValueError:
+            cover_src = str(cover_path.resolve())
+        cover_html = (
+            '<div class="cover-page">'
+            f'<img src="{cover_src}" alt="Cover" class="cover-img">'
+            "</div>"
+        )
+
+    return HTML_TEMPLATE.format(title=title, cover=cover_html, body=body_html)
 
 
 def _build_toc_html(toc_raw: str) -> str:
@@ -412,7 +452,23 @@ def main() -> None:
         sys.exit(1)
 
     topic_slug = sys.argv[1]
-    print(f"Assembling: {topic_slug}")
+
+    # Parse optional --cover <path>
+    cover_path: Path | None = None
+    args = sys.argv[2:]
+    if "--cover" in args:
+        idx = args.index("--cover")
+        if idx + 1 < len(args):
+            raw = args[idx + 1]
+            p = Path(raw)
+            cover_path = p if p.is_absolute() else (WORKSPACE_ROOT / p).resolve()
+            if not cover_path.exists():
+                print(f"⚠  Cover image not found: {cover_path} — skipping cover")
+                cover_path = None
+        else:
+            print("⚠  --cover requires a path argument")
+
+    print(f"Assembling: {topic_slug}" + (f" (cover: {cover_path})" if cover_path else ""))
 
     try:
         content = assemble(topic_slug)
@@ -423,14 +479,22 @@ def main() -> None:
     today = date.today().strftime("%Y-%m-%d")
     stem = f"{topic_slug}-{today}"
 
-    # ── Markdown ──
+    # ── Markdown — prepend cover image reference if provided ──
+    md_content = inject_md_toc(content)
+    if cover_path:
+        try:
+            rel = cover_path.resolve().relative_to(RESEARCH_OUTPUT.resolve())
+            cover_md_src = str(rel)
+        except ValueError:
+            cover_md_src = str(cover_path.resolve())
+        md_content = f"![Cover]({cover_md_src})\n\n" + md_content
     md_path = RESEARCH_OUTPUT / f"{stem}.md"
-    md_path.write_text(inject_md_toc(content), encoding="utf-8")
+    md_path.write_text(md_content, encoding="utf-8")
     print(f"Saved → {md_path}")
 
     # ── HTML ──
     try:
-        html_content = md_to_html(content, topic_slug, RESEARCH_OUTPUT)
+        html_content = md_to_html(content, topic_slug, RESEARCH_OUTPUT, cover_path)
         html_path = RESEARCH_OUTPUT / f"{stem}.html"
         html_path.write_text(html_content, encoding="utf-8")
         print(f"Saved → {html_path}")

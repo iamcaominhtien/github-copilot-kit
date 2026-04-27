@@ -44,6 +44,7 @@ Orchestrator uses this table only to **describe styles to the user in PHASE 0** 
 | `blogger` | `.github/skills/writing-styles/blogger.md` |
 | `academic` | `.github/skills/writing-styles/academic.md` |
 | `tldr` | `.github/skills/writing-styles/tldr.md` |
+| `textbook` | `.github/skills/writing-styles/textbook.md` |
 
 ---
 
@@ -69,6 +70,8 @@ Before starting, do the following:
          description: "Research paper style. Abstract → Findings → Limitations. Citation-heavy, hedged language."
        - label: "⚡ TL;DR"
          description: "Ultra-concise. Bullet matrices, tables everywhere, zero fluff."
+       - label: "📖 Textbook"
+         description: "Giáo trình / University textbook style. Learning objectives first, DEFA pattern, pedagogical scaffolding."
 
    Question 2:
      header: "Output Language"
@@ -89,6 +92,7 @@ Before starting, do the following:
    - `✍️ Blogger` → `blogger`
    - `🎓 Academic` → `academic`
    - `⚡ TL;DR` → `tldr`
+   - `📖 Textbook` → `textbook`
 
    Map language:
    - `🌐 Auto-detect` → infer from topic language and conversation; if ambiguous, use English
@@ -587,7 +591,61 @@ Report back:
 
 ---
 
-**Wait for errand-boy to finish.** When it returns, update `_index.md` and report the output path to the user.
+**Wait for errand-boy to finish.** When it returns, proceed to PHASE 6.
+
+---
+
+## PHASE 6 — COVER PAGE DESIGN
+
+Delegate cover image creation to the `designer` agent via `runSubagent`.
+
+Provide this briefing:
+
+```
+Design a cover page image for a research report.
+
+Topic: [TOPIC]
+Style: [STYLE]  ← professional / journalist / blogger / academic / tldr / textbook
+Date: [DATE]
+Language: [LANG]
+
+Design requirements:
+- Paper size: US Letter (8.5" × 11"), portrait orientation
+- The image must feel like a premium magazine or book cover — not a slide deck
+- Include: a strong visual motif that evokes the topic, the report title (prominent), the date (subtle)
+- Typography: clean, high contrast, legible
+- Color palette: derive from the topic mood — dark and authoritative for professional/academic,
+  warm and editorial for journalist, energetic for blogger, stark minimal for tldr,
+  structured and clear for textbook
+- You are free to find and incorporate real images from the web to enrich the cover —
+  you do not need to create everything from scratch
+- No placeholder text, no lorem ipsum, no borders labeled "image goes here"
+- This is the final image — design it as if going to print
+
+Output: a single image file (PNG or JPG) saved to:
+  ./research-output/.artifacts/[topic-slug]/cover.[png|jpg]
+
+Return: the exact saved file path.
+```
+
+**After designer returns:**
+
+1. Use `view_image` to review the cover:
+   - Does it look professional and on-topic?
+   - Is the title legible?
+   - Does the visual feel match the report style?
+
+2. If the cover does NOT meet the bar → tell designer exactly what to fix and spawn again.
+   Repeat until satisfied (max 3 attempts).
+
+3. Once approved, delegate to `errand-boy` to re-run the assembler with the cover path:
+
+```
+Run the assembler with the cover image:
+  python .github/scripts/assemble.py [topic-slug] --cover ./research-output/.artifacts/[topic-slug]/cover.[ext]
+
+This will prepend the cover to the MD, HTML, and PDF outputs.
+```
 
 ---
 
