@@ -602,6 +602,14 @@ Delegate cover image creation to the `designer` agent via `runSubagent`.
 Provide this briefing:
 
 ```
+Before designing, load and apply the psychologist skill:
+  .github/skills/psychologist/SKILL.md
+
+Use it to understand what emotional response this cover should trigger in the reader,
+what visual metaphors resonate with the topic, and how to design for first impression.
+
+---
+
 Design a cover page image for a research report.
 
 Topic: [TOPIC]
@@ -641,10 +649,11 @@ Return: the exact saved file path.
 3. Once approved, delegate to `errand-boy` to re-run the assembler with the cover path:
 
 ```
-Run the assembler with the cover image:
+Run the assembler to rebuild all outputs with the approved cover:
   python .github/scripts/assemble.py [topic-slug] --cover ./research-output/.artifacts/[topic-slug]/cover.[ext]
 
-This will prepend the cover to the MD, HTML, and PDF outputs.
+This regenerates the MD, HTML, and PDF with the cover prepended.
+Report back the output file paths when done.
 ```
 
 ---
