@@ -6,5 +6,6 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "markdown>=3.10.2",
+    "pygments>=2.20.0",
     "weasyprint>=68.1",
 ]
